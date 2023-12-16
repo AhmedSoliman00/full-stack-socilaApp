@@ -9,8 +9,22 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 //middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3001"); // to allow the react app to fetch data from the server
+  res.header("Access-Control-Allow-Credentials", true); // to allow the cookie to be sent back and forth
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  ); // to allow the cookie to be sent back and forth
+  next();
+});
+
+
 app.use(express.json()); // to send json data
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3001",
+  credentials: true,
+}));
 app.use(cookieParser());
 
 
