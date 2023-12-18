@@ -1,5 +1,4 @@
 import express from "express";
-const app = express();
 import userRoutes from "./routes/users.js";
 import postsRoutes from "./routes/posts.js";
 import authRoutes from "./routes/auth.js";
@@ -7,6 +6,10 @@ import likesRoutes from "./routes/likes.js";
 import commentRoutes from "./routes/comments.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import multer from "multer";
+
+
+const app = express();
 
 //middleware
 app.use((req, res, next) => {
@@ -21,12 +24,34 @@ app.use((req, res, next) => {
 
 
 app.use(express.json()); // to send json data
+
 app.use(cors({
   origin: "http://localhost:3001",
   credentials: true,
 }));
+
 app.use(cookieParser());
 
+///////////////////////////////////////////////////////////////
+// use multer to upload files on local server
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../client/public/upload')
+  },
+  filename: function (req, file, cb) {
+    
+    cb(null, Date.now() + file.originalname)
+  }
+})
+
+const upload = multer({ storage: storage })
+
+app.post('/api/upload', upload.single('file'), (req, res) => {
+  const file = req.file;
+  res.status(200).json(file.filename)
+})
+
+///////////////////////////////////////////////////////////////
 
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postsRoutes);

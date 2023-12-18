@@ -14,6 +14,17 @@ const Share = () => {
   const [desc, setDesc] = useState("");
   const queryClient = useQueryClient();
 
+  // upload image
+  const upload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await makeRequest.post("/upload", formData);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
   // Mutations
   const mutation = useMutation(
     (newPost) => {
@@ -26,20 +37,30 @@ const Share = () => {
     }
   );
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
-    mutation.mutate({desc})
+    let imgUrl = "";
+    if (file) imgUrl = await upload();
+    mutation.mutate({ desc, img: imgUrl });
+    setDesc("");
+    setFile(null);
   };
   return (
     <div className="share">
       <div className="container">
         <div className="top">
-          <img src={currentUser.profilePic} alt="" />
-          <input
-            type="text"
-            placeholder={`What's on your mind ${currentUser.name}?`}
-            onChange={(e) => setDesc(e.target.value)}
-          />
+          <div className="left">
+            <img src={currentUser.profilePic} alt="" />
+            <input
+              type="text"
+              placeholder={`What's on your mind ${currentUser.name}?`}
+              onChange={(e) => setDesc(e.target.value)}
+              value={desc}
+            />
+          </div>
+          <div className="right">
+            {file && <img className="file" src={URL.createObjectURL(file)} alt="postimage" />}
+          </div>
         </div>
         <hr />
         <div className="bottom">
