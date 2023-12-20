@@ -7,7 +7,7 @@ import commentRoutes from "./routes/comments.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import multer from "multer";
-
+import relationShipRoutes from "./routes/relationships.js";
 
 const app = express();
 
@@ -58,6 +58,7 @@ app.use("/api/posts", postsRoutes);
 app.use("/api/likes", likesRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/relationships", relationShipRoutes);
 
 app.listen(3000, () => {
   console.log("Server started");

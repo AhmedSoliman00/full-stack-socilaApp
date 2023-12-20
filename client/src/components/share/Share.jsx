@@ -13,6 +13,8 @@ const Share = () => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
   const queryClient = useQueryClient();
+  console.log(currentUser)
+  console.log("helloo")
 
   // upload image
   const upload = async () => {
@@ -50,7 +52,15 @@ const Share = () => {
       <div className="container">
         <div className="top">
           <div className="left">
-            <img src={currentUser.profilePic} alt="" />
+          <img
+          src={
+            currentUser.profilePic
+              ? "/upload/" + currentUser.profilePic
+              : "user.jpg"
+          }
+          alt=""
+        />
+            
             <input
               type="text"
               placeholder={`What's on your mind ${currentUser.name}?`}
